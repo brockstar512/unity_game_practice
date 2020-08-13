@@ -18,6 +18,12 @@ public class BasicMovement : MonoBehaviour
         
 
         Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f);
+        //for controller   Vector3 movement = new Vector3(Input.GetAxis("MoveHorizontal"), Input.GetAxis("MoveVertical"), 0.0f);
+        
+        if(Input.GetButton("Fire")||Input.GetButtonDown("Fire1"))
+        {
+            Debug.Log("Fire the arrow!");
+        }
 
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
