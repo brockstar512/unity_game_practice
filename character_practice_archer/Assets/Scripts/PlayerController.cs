@@ -24,7 +24,9 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
        //player = ReInput.players.GetPlayer(playerId);
-
+       Cursor.lockState = CursorLockMode.Locked;
+       Cursor.visible = false;
+        // the cursor will be locked and hidden. you have to press esc to get it back
     }
 
     void Update()
@@ -66,15 +68,29 @@ public class PlayerController : MonoBehaviour
         if(useController)
         {
             movement = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f);
-            aim = new Vector3(Input.GetAxis("AimHorizontal"), Input.GetAxis("AimVertical"),0.0f);
+            //this might be an issue. I dont thnk aim horizontal and aim vertical is set up in the project settings
+            aim = new Vector3(Input.GetAxis("AimHorizontal"), Input.GetAxis("AimVertical"),0.0f);//havn'et set this up yet so it will cause errors
             aim.Normalize();//this will only allow the aimer to be within a certain amount of untits away from him.
             isAiming = Input.GetButton("Fire"); //this will be true when the button is pressed
-            endOfAiming = Input.GetButton("Fire") || Input.GetButtonUp("Fire1");//only true when the button is released
+            endOfAiming = Input.GetButtonUp("Fire") || Input.GetButtonUp("Fire1");//only true when the button is released
         }
         else
         {   
-        
+            movement = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f);
+            Vector3 mouseMovement = new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0.0f);
+            aim = aim + mouseMovement;
+            if(aim.magnitude > 1.0f){
+                aim.Normalize();
+                //if the aim magnitude is greater than one the crosshairs can't be more than 1 unit away from the archer
+            }
+            isAiming = Input.GetButton("Fire1");
+            endOfAiming = Input.GetButtonUp("Fire1");
+        }
 
+        if(movement.magnitude > 1.0f){
+            movement.Normalize();
+            //now the maximum speed he can go is 1. before if he went diagnoal 
+            //the speed in the x and the y would be mulitplied so he'd be going twice as facsr
         }
 
     }
@@ -86,11 +102,8 @@ public class PlayerController : MonoBehaviour
         shootingDirection = new Vector2(aim.x, aim.y);
     
         if(aim.magnitude > 0.0f){
-            // aim *= 0.4f;
             crossHair.transform.localPosition = aim * 0.4f;
             crossHair.SetActive(true);
-            shootingDirection.Normalize();
-
             shootingDirection.Normalize();
         if (endOfAiming)
         {
