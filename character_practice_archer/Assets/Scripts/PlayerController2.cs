@@ -52,8 +52,6 @@ public class PlayerController2 : MonoBehaviour
         animatorTop.SetFloat("AimMagnitude", aim.magnitude);//magitude is the speed or maybe movement pressure at which the animation shoudl start
         animatorTop.SetBool("Aim",Input.GetButton("Fire1"));
 
-
-
         transform.position = transform.position + movement * Time.deltaTime;
     }
     //magitude is the speed or maybe movement pressure at which the animation shoudl start
@@ -87,5 +85,6 @@ public class PlayerController2 : MonoBehaviour
     
     } 
 
-
+//aim has a transition time of 2 so it will play 2 times before exiting
+//the fire has a condition to decide weather it should move to the run state or the move state
 }
