@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public Animator animatorBottom;
     public GameObject crossHair;
     public GameObject arrowPrefab;
+    public Rigidbody2D rb;
     [SerializeField] float arrowVelocity = 3f;
     
     Vector2 shootingDirection;
@@ -16,8 +17,10 @@ public class PlayerController : MonoBehaviour
     Vector3 aim;
     bool isAiming;
     bool endOfAiming;
+    
 
     public bool useController;
+
 
     //private Player player;
 
@@ -59,7 +62,10 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Move(){
-        transform.position = transform.position + movement * Time.deltaTime;
+
+        //transform.position = transform.position + movement * Time.deltaTime;
+        rb.velocity = new Vector2(movement.x, movement.y);
+        //freeze roation under the rigid body in ui
 
     }
 
