@@ -181,13 +181,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd3d823df625f4d27afa02fc27cd3f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animatorTop: {fileID: 606069834}
-  animatorBottom: {fileID: 1352106920}
+  topAnimator: {fileID: 606069834}
+  bottomAnimator: {fileID: 1352106920}
   crossHair: {fileID: 1912599503}
   arrowPrefab: {fileID: 3178388822180477584, guid: 17c4c08c7b97c4fb3a7c8269bf4fa31c,
     type: 3}
   rb: {fileID: 192401731}
-  arrowVelocity: 3
   useController: 0
 --- !u!50 &192401731
 Rigidbody2D:

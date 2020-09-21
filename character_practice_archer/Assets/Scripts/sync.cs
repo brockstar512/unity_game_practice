@@ -17,17 +17,13 @@ public class sync : StateMachineBehaviour
     //}
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        //if movement is greater than 0 the archer has moved therefore 
-       if(animator.GetFloat("MoveMagnitude")>0.0f)
-       {
-           Animator animatorBottom = animator.gameObject.transform.parent.GetComponent<PlayerController>().animatorBottom;
-           float normalizeTime = animatorBottom.GetCurrentAnimatorStateInfo(0).normalizedTime;
-           animator.Play("Run",-1,normalizeTime);
-
-       }
-    }
+	override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+		if (animator.GetFloat("MoveMagnitude") > 0.0f) {
+			Animator bottomAnimator = animator.gameObject.transform.parent.parent.GetComponent<PlayerController>().bottomAnimator;
+			float normalizedTime = bottomAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+			animator.Play("Run", -1, normalizedTime);
+		}
+	}
 //https://www.youtube.com/watch?v=lh3uam5VUaQ&t=2s he doesnt really explain it amazingly but this is the video where he does this.
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
