@@ -4,129 +4,57 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // public int playerId = 0;
-	public Animator topAnimator;
-    public Animator bottomAnimator;
-	public GameObject crossHair;
-	public GameObject arrowPrefab;
+    [Header("Character attributes")]
+    public float MOVEMENT_BASE_SPEED = 1.0f;
+    //speed modifier
 
-  	public Rigidbody2D rb;
+    [Space]
+    [Header("Character stats")]
+    public Vector2 movementDirection;
+    public float movementSpeed;
 
- 
-    
-    Vector2 shootingDirection;
-	Vector3 movement;
-	Vector3 aim;
-    bool isAiming;
-    bool endOfAiming;
-    
+    [Space]
+    [Header("Scene references")]
+    public Rigidbody2D rb;
+    public Animator animator;
 
-    public bool useController;
-
-
-    //private Player player;
-
-    void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
-       //player = ReInput.players.GetPlayer(playerId);
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
-        // the cursor will be locked and hidden. you have to press esc to get it back
+
     }
 
+    // Update is called once per frame
     void Update()
     {
-		ProcessInputs();
-		AimAndShoot();
-		Animate();
-		Move();
+        ProcessInputs();
+        Move();
+        Animate();
+    }
 
+    void ProcessInputs()
+    {
+        movementDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        movementSpeed = Mathf.Clamp(movementDirection.magnitude, 0.0f, 1.0f);
+        movementDirection.Normalize();
 
     }
 
-    private void ProcessInputs(){
+    void Move()
+    {
+        rb.velocity = movementDirection * movementSpeed * MOVEMENT_BASE_SPEED;
+    }
 
-        if(useController)
+    void Animate()
+    {
+        if (movementDirection != Vector2.zero)
         {
-            movement = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f);
-            //this might be an issue. I dont thnk aim horizontal and aim vertical is set up in the project settings
-            aim = new Vector3(Input.GetAxis("AimHorizontal"), Input.GetAxis("AimVertical"),0.0f);//havn'et set this up yet so it will cause errors
-            aim.Normalize();//this will only allow the aimer to be within a certain amount of untits away from him.
-            isAiming = Input.GetButton("Fire"); //this will be true when the button is pressed
-            endOfAiming = Input.GetButtonUp("Fire") || Input.GetButtonUp("Fire1");//only true when the button is released
+            //this is so the idle does not go back to looking at camera.
+            //this whole thing mean only animate when the vector 2 do not equal 0 - so if you do not touch the control keep the sprite in the last known sprite keyfram
+            animator.SetFloat("Horizontal", movementDirection.x);
+            animator.SetFloat("Vertical", movementDirection.y);
         }
-        else
-        {   
- 			movement = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f);
-			Vector3 mouseMovement = new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0.0f);
-			aim = aim + mouseMovement;
-			if (aim.magnitude > 1.0f) {
-				aim.Normalize();
-                //if the aim magnitude is greater than one the crosshairs can't be more than 1 unit away from the archer
-            }
-			isAiming = Input.GetButton("Fire1");
-			endOfAiming = Input.GetButtonUp("Fire1");
-        }
-
-		if (movement.magnitude > 1.0f) {
-			movement.Normalize();
-            //now the maximum speed he can go is 1. before if he went diagnoal 
-            //the speed in the x and the y would be mulitplied so he'd be going twice as facsr
-        }
+        animator.SetFloat("Speed", movementSpeed);
 
     }
-
-    private void Animate(){
-
-        //we are aiming anytime so you need to connect aim from idle and run because both can tranistion into it
-        //animation movements
-  		bottomAnimator.SetFloat("Horizontal", movement.x);
-		bottomAnimator.SetFloat("Vertical", movement.y);
-		bottomAnimator.SetFloat("Magnitude", movement.magnitude);//presuure at which you move
-
-		topAnimator.SetFloat("MoveHorizontal", movement.x);
-		topAnimator.SetFloat("MoveVertical", movement.y);
-		topAnimator.SetFloat("MoveMagnitude", movement.magnitude);
-
-		topAnimator.SetFloat("AimHorizontal", aim.x);
-		topAnimator.SetFloat("AimVertical", aim.y);
-		topAnimator.SetFloat("AimMagnitude", aim.magnitude);
-		topAnimator.SetBool("Aim", isAiming);
-
-    }
-
-    private void Move(){
-
-        //transform.position = transform.position + movement * Time.deltaTime;
-        rb.velocity = new Vector2(movement.x, movement.y);
-        //freeze roation under the rigid body in ui
-
-    }
-
-    
-
-
-    private void AimAndShoot(){
-
-       Vector2 shootingDirection = new Vector2(aim.x, aim.y);
-
-        if (aim.magnitude > 0.0f) {
-			crossHair.transform.localPosition = aim * 0.4f;
-			crossHair.SetActive(true);
-
-			shootingDirection.Normalize();
-			if(endOfAiming) {
-				GameObject arrow = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
-				arrow.GetComponent<Rigidbody2D>().velocity = shootingDirection * 3.0f;
-				arrow.transform.Rotate(0, 0, Mathf.Atan2(shootingDirection.y, shootingDirection.x) * Mathf.Rad2Deg);
-				Destroy(arrow, 2.0f);
-			}
-		} else {
-			crossHair.SetActive(false);
-		}
-    
-    } 
-
-//aim has a transition time of 2 so it will play 2 times before exiting
-//the fire has a condition to decide weather it should move to the run state or the move state
 }

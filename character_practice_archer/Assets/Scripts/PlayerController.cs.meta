@@ -1,15 +1,9 @@
 fileFormatVersion: 2
-guid: dd3d823df625f4d27afa02fc27cd3f6e
+guid: b00a9ebf3b3c6401482ab788a87684bf
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - animatorTop: {instanceID: 0}
-  - animatorBottom: {instanceID: 0}
-  - crossHair: {instanceID: 0}
-  - arrowPrefab: {fileID: 3178388822180477584, guid: 17c4c08c7b97c4fb3a7c8269bf4fa31c,
-      type: 3}
-  - rb: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
